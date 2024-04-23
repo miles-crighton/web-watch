@@ -18,13 +18,18 @@ func check(e error) {
 func traverseNode(n *html.Node, depth int) {
 	indent := strings.Repeat("  ", depth)
 
+	var attrs []string
+	for _, attr := range n.Attr {
+		attrs = append(attrs, fmt.Sprintf("%s=\"%s\"", attr.Key, attr.Val))
+	}
+
 	switch n.Type {
 	case html.ElementNode:
-		fmt.Printf("%s<%s>\n", indent, n.Data)
+		fmt.Printf("%s<%s %s>\n", indent, n.Data, strings.Join(attrs, " "))
 	case html.TextNode:
 		text := strings.TrimSpace(n.Data)
 		if text != "" {
-			fmt.Printf("%s%s\n", indent, n.Data)
+			fmt.Printf("%s%s\n", indent, text)
 		}
 	case html.CommentNode:
 		fmt.Printf("%s<!-- %s -->\n", indent, n.Data)
